@@ -1,0 +1,25 @@
+.editIcon {
+    font-size: 20px;
+}
+
+.delIcon {
+    font-size: 20px;
+}
+
+.delIcon:hover {
+    color: crimson;
+}
+
+.editIcon:hover {
+    opacity: 0.8;
+}
+
+.li {
+    min-width: 200px;
+    display: flex;
+}
+
+.listIcons {
+    padding-right: 0 !important;
+    text-align: right;
+}
