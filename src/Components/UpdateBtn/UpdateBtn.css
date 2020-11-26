@@ -1,7 +1,7 @@
-.addIcon:hover {
+.updateBtn:hover {
     color: green;
 }
 
-.addIcon {
+.updateBtn {
     margin-bottom: 5px;
 }

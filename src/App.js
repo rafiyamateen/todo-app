@@ -4,6 +4,8 @@ import AddButton from './Components/AddButton/AddButton';
 import AddForm from './Components/AddForm/AddForm'
 import TodoList from './Components/TodoList/TodoList'
 import EditForm from './Components/EditForm/EditForm'
+import UpdateBtn from './Components/UpdateBtn/UpdateBtn'
+import { Alert } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
@@ -13,83 +15,127 @@ class App extends React.Component {
 
     this.state = {
       todoList: [],
-      input: '',
       id: 0,
-      edit: ''
+      input: {
+        todo: ''
+      },
+      edit: false,
+      alert: false
     }
   }
+
   onChange = (e) => {
     this.setState({
-      input: e.target.value
+      input: {
+        todo: e.target.value
+      },
+      alert: false
     })
   }
+
   addItem = () => {
-    if (this.state.input) {
-      const str = this.state.input,
+    if (this.state.input.todo) {
+      const str = this.state.input.todo,
         title = str[0].toUpperCase() + str.slice(1),
         newItem = [...this.state.todoList];
       newItem.push({ todo: title, id: this.state.id })
-      const idVal = this.state.id;
       this.setState({
         todoList: newItem,
-        input: '',
-        id: idVal + 1,
+        input: { todo: '' },
+        id: this.state.id + 1,
       })
     }
     else {
-      alert('Please enter an item')
+      this.setState({
+        alert: true
+      })
     }
   }
+
   editItem = (todo) => {
     this.setState({
-      edit: {
+      input: {
         todo: todo.todo,
         id: todo.id
-      }
+      },
+      edit: true
     })
   }
+
   deleteItem = (id) => {
     const newList = this.state.todoList.filter(todo => todo.id !== id)
     this.setState({
       todoList: newList
     })
   }
+
   update = (toEdit) => {
-    const string = toEdit.todo,
-      firstCap = string[0].toUpperCase() + string.slice(1),
-      updateItem = this.state.todoList.map(todo => (todo.id === toEdit.id ? { todo: firstCap, id: toEdit.id } : todo))
-    this.setState({
-      todoList: updateItem,
-      edit: ''
-    })
+    if (this.state.input.todo) {
+      const string = toEdit.todo,
+        firstCap = string[0].toUpperCase() + string.slice(1),
+        updateItem = this.state.todoList.map(todo => (todo.id === toEdit.id ? { todo: firstCap, id: toEdit.id } : todo))
+      this.setState({
+        todoList: updateItem,
+        input: {
+          todo: ''
+        },
+        edit: false
+      })
+    }
+    else {
+      this.setState({
+        alert: true
+      })
+    }
   }
+
   onEdit = (e) => {
     this.setState({
-      edit: {
+      input: {
         todo: e.target.value,
-        id: this.state.edit.id
-      }
+        id: this.state.input.id
+      },
+      alert: false
     })
   }
+  componentDidMount() {
+    document.getElementById('addForm').focus();
+  }
+  componentDidUpdate() {
+    if (this.state.edit) {
+      document.getElementById('editForm').focus();
+    }
+    else {
+      document.getElementById('addForm').focus();
+    }
+  }
+
   render() {
     return (
       <div className='appContainer'>
-        <h1 className='head'> TODO APP</h1>
-        {
-          this.state.edit ?
-            <EditForm edit={this.state.edit} onChange={this.onEdit} update={this.update} /> :
-            <div>
-              <AddForm onChange={this.onChange} input={this.state.input} />
-              <AddButton addItem={this.addItem} />
-            </div>
-        }
+        <h2 className='head'> TODO APP</h2>
+        <Alert id='alert' show={this.state.alert} variant='dark'>
+          Please enter an item!
+        </Alert>
+        <div className='addSec'>
+          {
+            this.state.edit ?
+              <>
+                <EditForm input={this.state.input} onChange={this.onEdit} />
+                <UpdateBtn input={this.state.input} update={this.update} />
+              </> :
+              <>
+                <AddForm onChange={this.onChange} input={this.state.input} />
+                <AddButton addItem={this.addItem} />
+              </>
+          }
+        </div>
         { this.state.todoList[0] ?
           <TodoList todoList={this.state.todoList} deleteItem={this.deleteItem} editItem={this.editItem} />
           : null
         }
       </div >
-    );
+    )
   }
-};
-
+}
 export default App;

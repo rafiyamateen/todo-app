@@ -1,11 +1,4 @@
-import './EditForm.css'
-const EditForm = ({ edit, update, onChange }) => {
-    return (
-        <div>
-            <input value={edit.todo} onChange={onChange} />
-            <button className='updateBtn' onClick={() => { update(edit) }}>Update</button>
-        </div>
-    )
+const EditForm = ({ input, onChange }) => {
+    return <input className='input' id='editForm' value={input.todo} onChange={onChange} />
 }
-
-export default EditForm
+export default EditForm;

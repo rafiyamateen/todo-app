@@ -1,9 +1,9 @@
-.editIcon {
+.editIcon, .delIcon {
     font-size: 20px;
 }
 
 .delIcon {
-    font-size: 20px;
+    margin-left: 3px;
 }
 
 .delIcon:hover {
@@ -11,15 +11,28 @@
 }
 
 .editIcon:hover {
-    opacity: 0.8;
+    color: green;
 }
 
-.li {
-    min-width: 200px;
+#listIcons {
     display: flex;
+    flex-wrap: nowrap;
+    padding: 5px;
+    margin-top: -3px;
 }
 
-.listIcons {
-    padding-right: 0 !important;
-    text-align: right;
+#list {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0 0 0;
+    min-width: 212px;
+    word-break: normal;
+}
+
+.list-group-item {
+    border-color: rgb(197, 195, 195) !important;
+}
+
+.list-group {
+    padding: 15px !important;
 }
