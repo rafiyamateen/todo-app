@@ -14,8 +14,8 @@ class App extends React.Component {
     super(props)
 
     this.state = {
-      todoList: [],
-      id: 0,
+      todoList: JSON.parse(localStorage.getItem('todoList')) || [],
+      id: JSON.parse(localStorage.getItem('id')) || 0,
       input: {
         todo: ''
       },
@@ -37,13 +37,15 @@ class App extends React.Component {
     if (this.state.input.todo) {
       const str = this.state.input.todo,
         title = str[0].toUpperCase() + str.slice(1),
-        newItem = [...this.state.todoList];
-      newItem.push({ todo: title, id: this.state.id })
+        newList = [...this.state.todoList];
+      newList.push({ todo: title, id: this.state.id })
       this.setState({
-        todoList: newItem,
+        todoList: newList,
         input: { todo: '' },
         id: this.state.id + 1,
       })
+      localStorage.setItem('id', JSON.stringify(this.state.id + 1))
+      localStorage.setItem('todoList', JSON.stringify(newList))
     }
     else {
       this.setState({
@@ -63,10 +65,17 @@ class App extends React.Component {
   }
 
   deleteItem = (id) => {
-    const newList = this.state.todoList.filter(todo => todo.id !== id)
+    const filteredList = this.state.todoList.filter(todo => todo.id !== id)
     this.setState({
-      todoList: newList
+      todoList: filteredList
     })
+    localStorage.setItem('todoList', JSON.stringify(filteredList))
+    if (!JSON.parse(localStorage.getItem('todoList'))[0]) {
+      localStorage.setItem('id', JSON.stringify(0))
+      this.setState({
+        id: 0
+      })
+    }
   }
 
   update = (toEdit) => {
@@ -81,6 +90,7 @@ class App extends React.Component {
         },
         edit: false
       })
+      localStorage.setItem('todoList', JSON.stringify(updateItem))
     }
     else {
       this.setState({
@@ -130,8 +140,8 @@ class App extends React.Component {
               </>
           }
         </div>
-        { this.state.todoList[0] ?
-          <TodoList todoList={this.state.todoList} deleteItem={this.deleteItem} editItem={this.editItem} />
+        { JSON.parse(localStorage.getItem('todoList')) ?
+          <TodoList todoList={JSON.parse(localStorage.getItem('todoList'))} deleteItem={this.deleteItem} editItem={this.editItem} />
           : null
         }
       </div >
